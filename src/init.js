@@ -1,5 +1,6 @@
 
 import loadEvent from "../src/events/loadEvent.js";
+import loadEventBtn from "./events/loadEventBtn.js";
 
 
 // dom.btn.addEventListener('click', loadPokemon);
@@ -10,7 +11,9 @@ import loadEvent from "../src/events/loadEvent.js";
 // });
 // loadPokemon();
 
-loadEvent()
+loadEvent();
+loadEventBtn();
+
 
 
 

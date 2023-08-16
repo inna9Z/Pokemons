@@ -1,7 +1,6 @@
 const dom = {
     root: document.getElementById('root'),
-    // container: document.getElementById('container'),
-    error: document.createElement('div'),
+    error:document.getElementById('error'),
     btn: document.getElementById('loadPokemon'),
     input: document.getElementById('pokemonIdInput'),
 };

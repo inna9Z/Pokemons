@@ -1,49 +1,60 @@
 import dom from '../dom.js';
-import data from '../data.js';
+
 
 import createPokemonList from '../components/createPokemonList.js';
 import getPokemonById from '../../apis/getPokemonById.js';
-import updatePokemon from '../components/updatePokemon.js';
+
 const loadPokemon = async () => {
-    const pokemonExist = document.getElementById('container');
+ debugger;
+   // empty the root 
+    dom.root.innerHTML = '';
 
-    const pokemonId = Number(dom.input.value);
+    // get the input value
+    const value = dom.input.value;
 
-    // check if the same pokemon
-    if (pokemonId === data.id) {
+      // if not input , tell the user no input
+    if (!value) {
+    dom.error.innerText = 'Please entered Pokemon ids separate by ","'
+    dom.error.classList.add('error');
+    return;
+}
+
+     // get valid ids = [];
+
+     const validIds = [];
+     const values = value.split(',');
+     values.forEach((val) => {
+    const valNumber = Number(val);
+    if (!Number.isNaN(valNumber) && valNumber > 0 && valNumber < 1281) {
+        validIds.push(valNumber);
+    }
+     })
+    
+
+    // check if valid ids.length === 0, show message error
+
+    if(validIds.length === 0) {
+        dom.error.innerText = 'Please enter valid id';
+        dom.error.classList.add('error');
         return;
     }
-    data.id = pokemonId;
 
-    if (isNaN(pokemonId) || pokemonId <= 0) {
-        dom.error.innerText = 'Please enter a valid pokemon ID';
-        dom.root.append(dom.error);
-        if (pokemonExist !== null) {
-            pokemonExist.remove();
-        }
+    // map through ids create array of promises
 
-        return;
-    }
+    const pokemonPromise = validIds.map((id) => getPokemonById(id))
 
-    const dataPokemonId = await getPokemonById(pokemonId);
+    // promise.all
 
-    if (!dataPokemonId) {
-        dom.error.innerText = 'An error occurred';
-        dom.root.append(dom.error);
-        if (pokemonExist !== null) {
-            pokemonExist.remove();
-        }
+    const getPokemon = await Promise.all(pokemonPromise);
 
-        return;
-    }
+    // loop through result , create pokemon using component function and append to the root
 
-    dom.error.remove();
-    if (!pokemonExist) {
-        const pokemonDom = createPokemonList(dataPokemonId); // Fixed function name
+    getPokemon.forEach((pokemonData) => {
+        const pokemonDom = createPokemonList(pokemonData);
         dom.root.append(pokemonDom);
-    } else {
-        updatePokemon(dataPokemonId);
-    }
+    })
+
+
 };
 
 export default loadPokemon;
