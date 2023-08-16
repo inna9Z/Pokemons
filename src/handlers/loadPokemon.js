@@ -39,6 +39,13 @@ const loadPokemon = async () => {
         return;
     }
 
+    // remove error if it exists
+
+    if(dom.error.innerText !== '') {
+        dom.error.innerText = '';
+        dom.error.classList.remove('error')
+    }
+
     // map through ids create array of promises
 
     const pokemonPromise = validIds.map((id) => getPokemonById(id))
